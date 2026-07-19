@@ -116,8 +116,11 @@ export default function ProductDetail() {
           )}
           <p className="text-4xl font-bold mb-6">{product.price} ج.م</p>
 
-          {step === 'view' && !purchasedCode && (
+          {step === 'view' && !purchasedCode && product.status === 'active' && (
             <Button size="lg" className="w-full" onClick={handleBuy}>شراء المنتج</Button>
+          )}
+          {step === 'view' && !purchasedCode && product.status !== 'active' && (
+            <p className="text-sm text-muted-foreground text-center py-4">هذا المنتج غير متاح للشراء حالياً</p>
           )}
 
           {step === 'done' && purchasedCode && (

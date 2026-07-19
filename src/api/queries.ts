@@ -24,12 +24,18 @@ export async function getTeachers(subjectId: string): Promise<Teacher[]> {
 }
 
 export async function getProducts(teacherId: string): Promise<Product[]> {
-  const { data } = await supabase.from('products').select('*').eq('teacher_id', teacherId).order('created_at', { ascending: false })
+  const { data } = await supabase
+    .from('products')
+    .select('*')
+    .eq('teacher_id', teacherId)
+    .eq('status', 'active')
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
   return data ?? []
 }
 
 export async function getProduct(id: string): Promise<(Product & { teacher: Teacher | null }) | null> {
-  const { data } = await supabase.from('products').select('*, teacher:teachers(*)').eq('id', id).single()
+  const { data } = await supabase.from('products').select('*, teacher:teachers(*)').eq('id', id).is('deleted_at', null).single()
   return data as (Product & { teacher: Teacher | null }) | null
 }
 

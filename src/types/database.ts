@@ -49,6 +49,9 @@ export interface Product {
   price: number
   image: string | null
   is_reusable: boolean
+  status: 'active' | 'hidden' | 'archived'
+  deleted_at: string | null
+  deleted_by: string | null
   created_at: string
 }
 
