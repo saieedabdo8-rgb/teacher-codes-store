@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getStages } from '@/api/queries'
+import { useSettings } from '@/contexts/SettingsContext'
 import type { Stage } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -9,6 +10,7 @@ import { GraduationCap } from 'lucide-react'
 export default function Home() {
   const [stages, setStages] = useState<Stage[]>([])
   const [loading, setLoading] = useState(true)
+  const { getSetting } = useSettings()
 
   useEffect(() => {
     getStages().then(data => {
@@ -20,8 +22,8 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-3">Teacher Codes Store</h1>
-        <p className="text-muted-foreground text-lg">اختر المرحلة التعليمية</p>
+        <h1 className="text-4xl font-bold mb-3">{getSetting('homepage_title')}</h1>
+        <p className="text-muted-foreground text-lg">{getSetting('homepage_description')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

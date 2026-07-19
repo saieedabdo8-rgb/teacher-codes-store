@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { SettingsProvider } from '@/contexts/SettingsContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import StudentLayout from '@/layouts/StudentLayout'
 import AdminLayout from '@/layouts/AdminLayout'
@@ -24,12 +25,14 @@ import ProductsPage from '@/pages/admin/ProductsPage'
 import CodesPage from '@/pages/admin/CodesPage'
 import OrdersPage from '@/pages/admin/OrdersPage'
 import PaymentsPage from '@/pages/admin/PaymentsPage'
+import SettingsPage from '@/pages/admin/SettingsPage'
 
 export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
+          <SettingsProvider>
           <Toaster position="top-center" />
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -60,10 +63,12 @@ export default function App() {
               <Route path="codes" element={<CodesPage />} />
               <Route path="orders" element={<OrdersPage />} />
               <Route path="payments" element={<PaymentsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </SettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

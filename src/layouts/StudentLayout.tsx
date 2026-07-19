@@ -1,12 +1,14 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useSettings } from '@/contexts/SettingsContext'
 import { Button } from '@/components/ui/button'
 import { Moon, Sun, LogOut, ShoppingBag, User, Home } from 'lucide-react'
 
 export default function StudentLayout() {
   const { profile, signOut } = useAuth()
   const { theme, toggle } = useTheme()
+  const { getSetting } = useSettings()
   const navigate = useNavigate()
 
   async function handleLogout() {
@@ -18,7 +20,7 @@ export default function StudentLayout() {
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-background sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-bold">Teacher Codes Store</Link>
+          <Link to="/" className="text-xl font-bold">{getSetting('app_name')}</Link>
           <nav className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
               <Link to="/"><Home className="w-4 h-4 ml-1" />الرئيسية</Link>

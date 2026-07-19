@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
   Moon, Sun, LogOut, LayoutDashboard, GraduationCap, BookOpen, Users, UserSquare2,
-  Package, Key, ShoppingCart, Wallet, ChevronRight, PanelRight,
+  Package, Key, ShoppingCart, Wallet, Settings, ChevronRight, PanelRight,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -19,6 +19,7 @@ const navItems = [
   { href: '/admin/codes', label: 'الأكواد', icon: Key },
   { href: '/admin/orders', label: 'الطلبات', icon: ShoppingCart },
   { href: '/admin/payments', label: 'المدفوعات', icon: Wallet },
+  { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
 ]
 
 export default function AdminLayout() {
