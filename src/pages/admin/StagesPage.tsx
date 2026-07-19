@@ -1,35 +1,28 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import type { Section, Stage } from '@/types'
+import type { Stage } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-export default function SectionsPage() {
-  const [sections, setSections] = useState<(Section & { stage: Stage | null })[]>([])
+export default function StagesPage() {
   const [stages, setStages] = useState<Stage[]>([])
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
-  const [editItem, setEditItem] = useState<Section | null>(null)
+  const [editItem, setEditItem] = useState<Stage | null>(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [stageId, setStageId] = useState('')
   const [saving, setSaving] = useState(false)
 
   async function load() {
-    const [sectionsRes, stagesRes] = await Promise.all([
-      supabase.from('sections').select('*, stage:stages(*)').order('name'),
-      supabase.from('stages').select('*').order('name'),
-    ])
-    setSections(sectionsRes.data ?? [])
-    setStages(stagesRes.data ?? [])
+    const { data } = await supabase.from('stages').select('*').order('name')
+    setStages(data ?? [])
     setLoading(false)
   }
 
@@ -39,15 +32,13 @@ export default function SectionsPage() {
     setEditItem(null)
     setName('')
     setDescription('')
-    setStageId(stages[0]?.id ?? '')
     setOpen(true)
   }
 
-  function openEdit(section: Section & { stage: Stage | null }) {
-    setEditItem(section)
-    setName(section.name)
-    setDescription(section.description ?? '')
-    setStageId(section.stage_id ?? stages[0]?.id ?? '')
+  function openEdit(stage: Stage) {
+    setEditItem(stage)
+    setName(stage.name)
+    setDescription(stage.description ?? '')
     setOpen(true)
   }
 
@@ -55,10 +46,10 @@ export default function SectionsPage() {
     e.preventDefault()
     setSaving(true)
     if (editItem) {
-      await supabase.from('sections').update({ name, description, stage_id: stageId || null }).eq('id', editItem.id)
+      await supabase.from('stages').update({ name, description }).eq('id', editItem.id)
       toast.success('تم التحديث')
     } else {
-      await supabase.from('sections').insert({ name, description, stage_id: stageId || null })
+      await supabase.from('stages').insert({ name, description })
       toast.success('تم الإنشاء')
     }
     setSaving(false)
@@ -68,7 +59,7 @@ export default function SectionsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('هل أنت متأكد؟')) return
-    await supabase.from('sections').delete().eq('id', id)
+    await supabase.from('stages').delete().eq('id', id)
     toast.success('تم الحذف')
     load()
   }
@@ -76,33 +67,30 @@ export default function SectionsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">الأقسام</h1>
-        <Button onClick={openCreate}><Plus className="w-4 h-4 ml-2" />إضافة قسم</Button>
+        <h1 className="text-3xl font-bold">المراحل التعليمية</h1>
+        <Button onClick={openCreate}><Plus className="w-4 h-4 ml-2" />إضافة مرحلة</Button>
       </div>
 
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
         </div>
-      ) : sections.length === 0 ? (
-        <p className="text-muted-foreground">لا توجد أقسام بعد</p>
+      ) : stages.length === 0 ? (
+        <p className="text-muted-foreground">لا توجد مراحل بعد</p>
       ) : (
         <div className="space-y-3">
-          {sections.map(section => (
-            <Card key={section.id}>
+          {stages.map(stage => (
+            <Card key={stage.id}>
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
-                  <p className="font-semibold">{section.name}</p>
-                  <div className="flex gap-2 text-xs text-muted-foreground mt-1">
-                    {section.stage && <span>{section.stage.name}</span>}
-                    {section.description && <span>— {section.description}</span>}
-                  </div>
+                  <p className="font-semibold">{stage.name}</p>
+                  {stage.description && <p className="text-sm text-muted-foreground">{stage.description}</p>}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" onClick={() => openEdit(section)}>
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(stage)}>
                     <Pencil className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => handleDelete(section.id)}>
+                  <Button variant="ghost" size="icon" onClick={() => handleDelete(stage.id)}>
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </Button>
                 </div>
@@ -115,15 +103,9 @@ export default function SectionsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editItem ? 'تعديل قسم' : 'إضافة قسم'}</DialogTitle>
+            <DialogTitle>{editItem ? 'تعديل مرحلة' : 'إضافة مرحلة'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4">
-            <div className="space-y-2">
-              <Label>المرحلة التعليمية</Label>
-              <Select value={stageId} onChange={e => setStageId(e.target.value)}>
-                {stages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </Select>
-            </div>
             <div className="space-y-2">
               <Label>الاسم</Label>
               <Input value={name} onChange={e => setName(e.target.value)} required />

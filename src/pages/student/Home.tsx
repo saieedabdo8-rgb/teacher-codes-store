@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getSections } from '@/api/queries'
-import type { Section } from '@/types'
+import { getStages } from '@/api/queries'
+import type { Stage } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { BookOpen } from 'lucide-react'
+import { GraduationCap } from 'lucide-react'
 
 export default function Home() {
-  const [sections, setSections] = useState<Section[]>([])
+  const [stages, setStages] = useState<Stage[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getSections().then(data => {
-      setSections(data)
+    getStages().then(data => {
+      setStages(data)
       setLoading(false)
     })
   }, [])
@@ -21,7 +21,7 @@ export default function Home() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-3">Teacher Codes Store</h1>
-        <p className="text-muted-foreground text-lg">اختر القسم الذي تريد تصفحه</p>
+        <p className="text-muted-foreground text-lg">اختر المرحلة التعليمية</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -33,23 +33,23 @@ export default function Home() {
                 <CardContent><Skeleton className="h-4 w-full" /></CardContent>
               </Card>
             ))
-          : sections.map(section => (
-              <Link key={section.id} to={`/section/${section.id}`}>
+          : stages.map(stage => (
+              <Link key={stage.id} to={`/stage/${stage.id}`}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
-                  {section.image && (
-                    <img src={section.image} alt={section.name} className="w-full h-48 object-cover" />
+                  {stage.image && (
+                    <img src={stage.image} alt={stage.name} className="w-full h-48 object-cover" />
                   )}
-                  {!section.image && (
+                  {!stage.image && (
                     <div className="w-full h-48 bg-muted flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 text-muted-foreground" />
+                      <GraduationCap className="w-12 h-12 text-muted-foreground" />
                     </div>
                   )}
                   <CardHeader>
-                    <CardTitle>{section.name}</CardTitle>
+                    <CardTitle>{stage.name}</CardTitle>
                   </CardHeader>
-                  {section.description && (
+                  {stage.description && (
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">{section.description}</p>
+                      <p className="text-sm text-muted-foreground">{stage.description}</p>
                     </CardContent>
                   )}
                 </Card>

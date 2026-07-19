@@ -1,8 +1,15 @@
 import { supabase } from '@/lib/supabase'
-import type { Section, Subject, Teacher, Product, Order, Payment, Code, Profile } from '@/types'
+import type { Stage, Section, Subject, Teacher, Product, Order, Payment, Code, Profile } from '@/types'
 
-export async function getSections(): Promise<Section[]> {
-  const { data } = await supabase.from('sections').select('*').order('name')
+export async function getStages(): Promise<Stage[]> {
+  const { data } = await supabase.from('stages').select('*').order('name')
+  return data ?? []
+}
+
+export async function getSections(stageId?: string): Promise<Section[]> {
+  let query = supabase.from('sections').select('*').order('name')
+  if (stageId) query = query.eq('stage_id', stageId)
+  const { data } = await query
   return data ?? []
 }
 

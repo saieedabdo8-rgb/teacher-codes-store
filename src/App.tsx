@@ -8,6 +8,7 @@ import AdminLayout from '@/layouts/AdminLayout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import Home from '@/pages/student/Home'
+import StageSections from '@/pages/student/StageSections'
 import SectionSubjects from '@/pages/student/SectionSubjects'
 import SubjectTeachers from '@/pages/student/SubjectTeachers'
 import TeacherProducts from '@/pages/student/TeacherProducts'
@@ -15,6 +16,7 @@ import ProductDetail from '@/pages/student/ProductDetail'
 import Purchases from '@/pages/student/Purchases'
 import Profile from '@/pages/student/Profile'
 import Dashboard from '@/pages/admin/Dashboard'
+import StagesPage from '@/pages/admin/StagesPage'
 import SectionsPage from '@/pages/admin/SectionsPage'
 import SubjectsPage from '@/pages/admin/SubjectsPage'
 import TeachersPage from '@/pages/admin/TeachersPage'
@@ -37,6 +39,7 @@ export default function App() {
               <ProtectedRoute><StudentLayout /></ProtectedRoute>
             }>
               <Route index element={<Home />} />
+              <Route path="stage/:stageId" element={<StageSections />} />
               <Route path="section/:sectionId" element={<SectionSubjects />} />
               <Route path="subject/:subjectId" element={<SubjectTeachers />} />
               <Route path="teacher/:teacherId" element={<TeacherProducts />} />
@@ -49,6 +52,7 @@ export default function App() {
               <ProtectedRoute adminOnly><AdminLayout /></ProtectedRoute>
             }>
               <Route index element={<Dashboard />} />
+              <Route path="stages" element={<StagesPage />} />
               <Route path="sections" element={<SectionsPage />} />
               <Route path="subjects" element={<SubjectsPage />} />
               <Route path="teachers" element={<TeachersPage />} />

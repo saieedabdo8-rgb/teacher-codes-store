@@ -6,8 +6,17 @@ export interface Profile {
   created_at: string
 }
 
+export interface Stage {
+  id: string
+  name: string
+  description: string | null
+  image: string | null
+  created_at: string
+}
+
 export interface Section {
   id: string
+  stage_id: string | null
   name: string
   description: string | null
   image: string | null

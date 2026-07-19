@@ -14,9 +14,19 @@ create table if not exists profiles (
   created_at timestamptz default now()
 );
 
+-- STAGES (e.g. Secondary, Preparatory, Primary, University)
+create table if not exists stages (
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  description text,
+  image text,
+  created_at timestamptz default now()
+);
+
 -- SECTIONS (e.g. Science, Math, Literature)
 create table if not exists sections (
   id uuid primary key default uuid_generate_v4(),
+  stage_id uuid references stages(id) on delete cascade,
   name text not null,
   description text,
   image text,
@@ -88,6 +98,8 @@ create table if not exists payments (
 );
 
 -- INDEXES
+create index if not exists idx_stages_name on stages(name);
+create index if not exists idx_sections_stage on sections(stage_id);
 create index if not exists idx_subjects_section on subjects(section_id);
 create index if not exists idx_teachers_subject on teachers(subject_id);
 create index if not exists idx_products_teacher on products(teacher_id);
@@ -117,6 +129,19 @@ create policy "Admins can view all profiles" on profiles for select using (
 );
 create policy "Users can update own profile" on profiles for update using (auth.uid() = id);
 create policy "Admins can update any profile" on profiles for update using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+
+-- Stages
+alter table stages enable row level security;
+create policy "Stages are viewable by everyone" on stages for select using (true);
+create policy "Admins can insert stages" on stages for insert with check (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+create policy "Admins can update stages" on stages for update using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+create policy "Admins can delete stages" on stages for delete using (
   exists (select 1 from profiles where id = auth.uid() and role = 'admin')
 );
 

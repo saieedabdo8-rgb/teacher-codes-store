@@ -4,13 +4,14 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
-  Moon, Sun, LogOut, LayoutDashboard, BookOpen, Users, UserSquare2,
+  Moon, Sun, LogOut, LayoutDashboard, GraduationCap, BookOpen, Users, UserSquare2,
   Package, Key, ShoppingCart, Wallet, ChevronRight, PanelRight,
 } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
   { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard },
+  { href: '/admin/stages', label: 'المراحل', icon: GraduationCap },
   { href: '/admin/sections', label: 'الأقسام', icon: BookOpen },
   { href: '/admin/subjects', label: 'المواد', icon: Users },
   { href: '/admin/teachers', label: 'المدرسين', icon: UserSquare2 },
