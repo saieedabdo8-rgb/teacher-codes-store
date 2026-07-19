@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { sanitize, validatePhone, validatePassword } from '@/lib/security'
 import toast from 'react-hot-toast'
 
 export default function Register() {
@@ -22,12 +23,11 @@ export default function Register() {
       toast.error('كلمة المرور غير متطابقة')
       return
     }
-    if (password.length < 6) {
-      toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل')
-      return
-    }
+    const pwError = validatePassword(password)
+    if (pwError) { toast.error(pwError); return }
+    if (!validatePhone(phone)) { toast.error('رقم الهاتف غير صالح'); return }
     setLoading(true)
-    const error = await signUp(fullName, phone, password)
+    const error = await signUp(sanitize(fullName), sanitize(phone), password)
     setLoading(false)
     if (error) {
       toast.error(error)

@@ -67,7 +67,8 @@ export async function createOrder(userId: string, productId: string) {
 }
 
 export async function createPayment(orderId: string, userId: string, amount: number, method: string, screenshotUrl: string) {
-  return supabase.from('payments').insert({ order_id: orderId, user_id: userId, amount, method, screenshot_url: screenshotUrl }).select().single()
+  const { callEdgeFunction } = await import('@/lib/security')
+  return callEdgeFunction('process-payment', 'POST', { order_id: orderId, amount, method, screenshot_url: screenshotUrl })
 }
 
 export async function uploadPaymentScreenshot(userId: string, file: File): Promise<string | null> {
@@ -87,21 +88,8 @@ export async function uploadImage(bucket: string, path: string, file: File): Pro
 }
 
 export async function approvePayment(paymentId: string) {
-  const { data: payment } = await supabase.from('payments').select('*, order:orders(*)').eq('id', paymentId).single()
-  if (!payment) return
-  const order = (payment as any).order
-  await supabase.from('payments').update({ status: 'approved' }).eq('id', paymentId)
-  await supabase.from('orders').update({ status: 'approved' }).eq('id', order.id)
-  const { data: code } = await supabase
-    .from('codes')
-    .select('*')
-    .eq('product_id', order.product_id)
-    .eq('status', 'unused')
-    .limit(1)
-    .maybeSingle()
-  if (code) {
-    await supabase.from('codes').update({ status: 'sold', sold_to: order.user_id, sold_at: new Date().toISOString() }).eq('id', code.id)
-  }
+  const { callEdgeFunction } = await import('@/lib/security')
+  return callEdgeFunction('assign-code', 'POST', { payment_id: paymentId })
 }
 
 export async function rejectPayment(paymentId: string) {

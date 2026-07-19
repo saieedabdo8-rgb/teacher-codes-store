@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { sanitize, validatePhone } from '@/lib/security'
 import toast from 'react-hot-toast'
 
 export default function Login() {
@@ -16,8 +17,9 @@ export default function Login() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!validatePhone(phone)) { toast.error('رقم الهاتف غير صالح'); return }
     setLoading(true)
-    const { error, role } = await signIn(phone, password)
+    const { error, role } = await signIn(sanitize(phone), password)
     setLoading(false)
     if (error) {
       toast.error(error)
