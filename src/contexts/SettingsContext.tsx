@@ -14,9 +14,9 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 const defaults: SettingsMap = {
-  app_name: 'Teacher Codes Store',
+  app_name: 'أنجز نفسك',
   slogan: 'أكاديمية تعليمية متكاملة',
-  homepage_title: 'Teacher Codes Store',
+  homepage_title: 'أنجز نفسك',
   homepage_description: 'اختر المرحلة التعليمية المناسبة لك',
   primary_color: '#2563eb',
   secondary_color: '#7c3aed',
@@ -26,8 +26,8 @@ const defaults: SettingsMap = {
   registration_enabled: 'true',
   products_enabled: 'true',
   maintenance_mode: 'false',
-  copyright_text: '© 2026 Teacher Codes Store. جميع الحقوق محفوظة.',
-  meta_title: 'Teacher Codes Store',
+  copyright_text: '© 2026 أنجز نفسك. جميع الحقوق محفوظة.',
+  meta_title: 'أنجز نفسك',
   meta_description: 'منصة لبيع أكواد التفعيل التعليمية',
 }
 
