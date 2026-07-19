@@ -11,17 +11,17 @@ export default function Login() {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn, isAdmin } = useAuth()
+  const { signIn } = useAuth()
   const navigate = useNavigate()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const error = await signIn(phone, password)
+    const { error, role } = await signIn(phone, password)
     setLoading(false)
     if (error) {
       toast.error(error)
-    } else if (isAdmin) {
+    } else if (role === 'admin') {
       navigate('/admin')
     } else {
       navigate('/')

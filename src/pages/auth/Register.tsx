@@ -31,6 +31,7 @@ export default function Register() {
     setLoading(false)
     if (error) {
       toast.error(error)
+      navigate('/login')
     } else {
       toast.success('تم إنشاء الحساب بنجاح')
       navigate('/')

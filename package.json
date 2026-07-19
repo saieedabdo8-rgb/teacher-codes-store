@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/200.html",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -30,7 +30,8 @@
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.9.2",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "ws": "^8.21.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
